@@ -1,35 +1,39 @@
 import React, { useReducer, useState } from 'react';
-
-const initialState = { count: 0 };
-const reducer = (currentState, action) => {
-    console.log("CurrentState => ", currentState);
-    console.log("Action => ", action);
+type TAction = {
+    type: string;
+    payload: string;
+}
+const initialState = {name: "", email: ""};
+const reducer = (currentState: typeof initialState, action: TAction) => {
     switch (action.type) {
-        case "increment":
-            return { count: currentState.count + 1 }
-            break;
-
-        case "decrement":
-            return { count: currentState.count - 1 }
-            break;
-        case "incrementBySetAmount":
-            return { count: currentState.count + action.payload }
-            break;
-
+        case "addName":
+            return {...currentState, name: action.payload}
+        case "addEmail":
+            return {...currentState, email: action.payload}
         default:
             return currentState;
     }
 }
 const UseReducer = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
+    const handleSubmit = (e:React.ChangeEvent<HTMLFormElement>) =>{
+        e.preventDefault();
+        console.log(state);
+    }
     return (
-        <div>
-            <h1>{state.count}</h1>
-            <button onClick={() => dispatch({ type: 'increment' })} className='btn bg-pink-300 text-white p-2 rounded-md'>Increment</button>
-            <button onClick={() => dispatch({ type: 'decrement' })} className='btn bg-black ml-3 text-white p-2 rounded-md'>Decrement</button>
-            <button onClick={() => dispatch({ type: 'incrementBySetAmount', payload: 10 })} className='btn bg-yellow-400 ml-3 text-white p-2 rounded-md'>Increment By 3</button>
-
-        </div>
+        <form onSubmit={handleSubmit}>
+            <input onChange={(e)=>dispatch({type: 'addName', payload: e.target.value})}
+                className='border px-2 py-4 mr-2 rounded-xl'
+                placeholder='your name'
+                type="text"
+                name="name" />
+            <input onChange={(e)=>dispatch({type: 'addEmail', payload: e.target.value})}
+                className='border px-2 py-4 mr-2 rounded-xl'
+                placeholder='your email'
+                type="eamil"
+                name="email" />
+            <button className='bg-[#f8f8f8] p-4 rounded-xl' type="submit">Submit</button>
+        </form>
     );
 };
 
